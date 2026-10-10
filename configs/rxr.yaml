@@ -1,0 +1,21 @@
+evaluation_mode: seekvln_c2po
+model_path: models/SeekVLN-FRG-SFT
+device: cuda:0
+num_frames: 9
+max_new_tokens: null
+do_sample: false
+temperature: 0.0
+top_p: 1.0
+top_k: -1
+vision_forward_chunk_size: 4
+invalid_action_policy: auxthink_random
+primitive_step_limit_ratio: null
+max_decisions_per_episode: null
+episode_limit: 1223
+output_dir: outputs/rxr
+habitat:
+  exp_config: evaluation/vlnce_baselines/config/rxr_baselines/navila.yaml
+  split: val_unseen
+  dataset_path: data/RxR_VLNCE_v0/{split}/{split}_guide.json.gz
+  gt_path: data/RxR_VLNCE_v0/{split}/{split}_guide_gt.json.gz
+  scenes_dir: data/scene_datasets
