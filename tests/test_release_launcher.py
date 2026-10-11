@@ -68,7 +68,9 @@ def test_preflight_checks_environment_resources(monkeypatch, tmp_path, dataset):
     config["habitat"]["scenes_dir"] = str(scenes)
     import shutil
 
-    shutil.copytree(ROOT / "evaluation", root / "evaluation")
+    shutil.copytree(
+        ROOT / "evaluation", root / "evaluation", ignore=shutil.ignore_patterns("data")
+    )
     monkeypatch.setattr(run_eval, "ROOT", root)
     if dataset == "r2r":
         with pytest.raises(FileNotFoundError, match="connectivity graphs"):
