@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter
+import math
 from typing import Any, Mapping
 
 
@@ -11,6 +12,8 @@ def aggregate_seekvln_decision_metrics(decisions: list[Mapping[str, Any]]) -> di
 
     The input is a flat list of decision records from the agent loop.  Standard
     VLN metrics are read from the final decision of each episode when present.
+    Explicitly unfinished episodes do not contribute terminal VLN metrics.
+    Legacy records without a done flag retain their previous behavior.
     """
 
     if not decisions:
@@ -44,6 +47,10 @@ def aggregate_seekvln_decision_metrics(decisions: list[Mapping[str, Any]]) -> di
         result[f"seekvln/invalid_reason/{reason}"] = float(count)
 
     final_decisions = list(_final_decisions_by_episode(decisions).values())
+    result["seekvln/incomplete_episode_count"] = float(
+        sum(item.get("done") is False for item in final_decisions)
+    )
+    final_decisions = [item for item in final_decisions if item.get("done") is not False]
     for output_name, source_names in (
         ("ne", ("distance_to_goal", "navigation_error", "NE")),
         ("sr", ("success",)),
@@ -51,12 +58,27 @@ def aggregate_seekvln_decision_metrics(decisions: list[Mapping[str, Any]]) -> di
         ("ndtw", ("ndtw", "nDTW")),
         ("osr", ("oracle_success", "oracle_success_rate", "oracle_sr")),
     ):
-        values = [
-            value
-            for item in final_decisions
-            for value in [_first_metric_value(item, source_names)]
-            if value is not None
-        ]
+        values = []
+        undefined = 0
+        zero_filled = 0
+        for item in final_decisions:
+            value = _first_metric_value(item, source_names)
+            # Habitat may return NaN SPL for a failed, unreachable-goal episode.
+            # Keep that failure in SPL, but exclude its undefined distance from NE.
+            if (output_name == "spl" and value is not None and not math.isfinite(value)
+                    and _first_metric_value(item, ("success",)) == 0.0):
+                distance = _first_metric_value(item, ("distance_to_goal", "navigation_error", "NE"))
+                if distance is not None and not math.isfinite(distance):
+                    value = 0.0
+                    zero_filled += 1
+            if value is None or not math.isfinite(value):
+                undefined += 1
+            else:
+                values.append(value)
+        result[f"seekvln/{output_name}_episode_count"] = float(len(values))
+        result[f"seekvln/{output_name}_undefined_episode_count"] = float(undefined)
+        if output_name == "spl":
+            result["seekvln/spl_zero_filled_episode_count"] = float(zero_filled)
         if values:
             result[f"seekvln/{output_name}"] = sum(values) / float(len(values))
     return result

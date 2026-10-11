@@ -49,6 +49,13 @@ conda activate seekvln-eval
 
 2. Build Habitat-Sim and Habitat-Lab **v0.1.7** from source.
 
+Install the OpenGL/EGL build dependencies in the same conda environment:
+
+```bash
+conda install -c conda-forge libgl-devel libegl-devel libopengl-devel libglx-devel -y
+export CMAKE_ARGS="-DCMAKE_PREFIX_PATH=$CONDA_PREFIX"
+```
+
 Follow the Habitat installation steps in the [VLN-CE setup guide](https://github.com/jacobkrantz/VLN-CE#setup) using the Python 3.10 environment above. Return to the SeekVLN root directory afterwards.
 
 3. Install PyTorch and SeekVLN from the repository root.

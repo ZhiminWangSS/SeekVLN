@@ -49,3 +49,60 @@ def test_seekvln_metrics_empty_input_is_well_defined():
     assert metrics["seekvln/episode_count"] == 0.0
     assert metrics["seekvln/decision_count"] == 0.0
     assert metrics["seekvln/invalid_trigger_rate"] == 0.0
+
+
+@pytest.mark.parametrize("distance", [float("inf"), float("nan"), None])
+def test_undefined_distance_does_not_drop_failure_from_other_metrics(distance):
+    records = [
+        {"episode_id": "1", "done": True, "distance_to_goal": 4.9,
+         "success": 1.0, "spl": 0.5, "ndtw": 0.8},
+        {"episode_id": "2", "done": True, "distance_to_goal": distance,
+         "success": 0.0, "spl": 0.0, "ndtw": 0.0},
+    ]
+    result = aggregate_seekvln_decision_metrics(records)
+    assert result["seekvln/ne"] == 4.9
+    assert result["seekvln/ne_episode_count"] == 1.0
+    assert result["seekvln/ne_undefined_episode_count"] == 1.0
+    assert result["seekvln/sr"] == 0.5
+    assert result["seekvln/spl"] == 0.25
+    assert result["seekvln/ndtw"] == 0.4
+
+
+def test_unreachable_failed_episode_nan_spl_counts_as_zero():
+    result = aggregate_seekvln_decision_metrics([
+        {"episode_id": "1", "distance_to_goal": 2.0, "success": 1.0, "spl": 0.6},
+        {"episode_id": "2", "distance_to_goal": float("inf"), "success": 0.0,
+         "spl": float("nan")},
+    ])
+    assert result["seekvln/ne"] == 2.0
+    assert result["seekvln/spl"] == 0.3
+    assert result["seekvln/spl_episode_count"] == 2.0
+    assert result["seekvln/spl_zero_filled_episode_count"] == 1.0
+
+
+def test_nonfinite_metric_is_reported_not_silently_zero_filled():
+    result = aggregate_seekvln_decision_metrics([
+        {"episode_id": "1", "distance_to_goal": 2.0, "success": 1.0, "spl": float("nan")},
+    ])
+    assert "seekvln/spl" not in result
+    assert result["seekvln/spl_undefined_episode_count"] == 1.0
+
+
+def test_partial_episode_is_not_a_terminal_metric():
+    result = aggregate_seekvln_decision_metrics([
+        {"episode_id": "1", "done": True, "success": 1.0},
+        {"episode_id": "2", "done": False, "success": 0.0},
+    ])
+    assert result["seekvln/episode_count"] == 2.0
+    assert result["seekvln/incomplete_episode_count"] == 1.0
+    assert result["seekvln/sr"] == 1.0
+    assert result["seekvln/sr_episode_count"] == 1.0
+
+
+def test_disjoint_shards_and_repeated_decisions_use_one_final_per_episode():
+    shard1 = [{"episode_id": "1", "decision_index": 0, "success": 0.0},
+              {"episode_id": "1", "decision_index": 1, "success": 1.0}]
+    shard2 = [{"episode_id": "2", "decision_index": 0, "success": 0.0}]
+    result = aggregate_seekvln_decision_metrics(shard2 + shard1)
+    assert result["seekvln/episode_count"] == 2.0
+    assert result["seekvln/sr"] == 0.5
