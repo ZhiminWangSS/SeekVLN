@@ -3,8 +3,7 @@
 # Seek Before You Move: Evidence Seeking for Progress Grounding in Vision-Language Navigation
 
 <p align="center" style="margin:1.4em 0 0.8em;">
-  <!-- Project Page: wrap this badge in a link once the project website is available. -->
-  <img src="https://img.shields.io/badge/Project_Page-Coming_Soon-2EA44F?style=flat&labelColor=555555" alt="Project Page (Coming Soon)">
+  <a href="https://zhiminwangss.github.io/seekvln-project/"><img src="https://img.shields.io/badge/Project_Page-SeekVLN-2EA44F?style=flat&labelColor=555555" alt="SeekVLN Project Page"></a>
   &nbsp;
   <a href="https://arxiv.org/abs/2609.37353"><img src="https://img.shields.io/badge/arXiv-2609.37353-B31B1B?style=flat&labelColor=555555&logo=arxiv&logoColor=white" alt="Paper"></a>
   &nbsp;
