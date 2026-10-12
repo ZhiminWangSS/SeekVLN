@@ -7,11 +7,7 @@
   &nbsp;
   <a href="https://arxiv.org/abs/2609.37353"><img src="https://img.shields.io/badge/arXiv-2609.37353-B31B1B?style=flat&labelColor=555555&logo=arxiv&logoColor=white" alt="Paper"></a>
   &nbsp;
-  <a href="https://huggingface.co/datasets/specialsuzuka/SeekVLN-Dataset"><img src="https://img.shields.io/badge/Dataset-SeekVLN-FFD63A?style=flat&labelColor=555555" alt="Dataset"></a>
-  &nbsp;
-  <a href="https://huggingface.co/specialsuzuka/SeekVLN-FRG-SFT"><img src="https://img.shields.io/badge/Checkpoint-FRG--SFT-FFD63A?style=flat&labelColor=555555" alt="FRG-SFT Checkpoint"></a>
-  &nbsp;
-  <a href="https://huggingface.co/specialsuzuka/SeekVLN-C2PO-RFT"><img src="https://img.shields.io/badge/Checkpoint-C2PO--RFT-FFD63A?style=flat&labelColor=555555" alt="C2PO-RFT Checkpoint"></a>
+  <a href="https://huggingface.co/collections/specialsuzuka/seekvln"><img src="https://img.shields.io/badge/Hugging_Face-Collection-FFD21E?style=flat&labelColor=555555&logo=huggingface&logoColor=FFD21E" alt="SeekVLN Hugging Face Collection"></a>
 </p>
 
 <p align="center">
@@ -27,7 +23,7 @@ and `SEEK` for acquiring task-relevant visual evidence before acting.
 
 ## Evaluation
 
-This repository releases **inference and evaluation code only**, without training pipelines. Models and data are available in our [Hugging Face collection](https://huggingface.co/collections/specialsuzuka/seekvln-6abcad5a8c398bb292e51252).
+This repository releases **inference and evaluation code only**, without training pipelines. Find SeekVLN resources in our [Hugging Face collection](https://huggingface.co/collections/specialsuzuka/seekvln).
 
 ### Installation
 
