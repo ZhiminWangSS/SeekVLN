@@ -1,8 +1,8 @@
 # Third-Party Notices
 
-This inference preparation copy retains upstream source headers and module
-paths. It is not yet a public release; the repository-level license must be
-confirmed before publication.
+This repository retains upstream source headers and module paths. The
+repository's original SeekVLN code is licensed under Apache-2.0 (see
+`LICENSE`); third-party code retains its own notices and license terms.
 
 - `llava/` includes code derived from [LLaVA](https://github.com/haotian-liu/LLaVA),
   [VILA](https://github.com/NVlabs/VILA), and [NaVILA](https://github.com/AnjieCheng/NaVILA).

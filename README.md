@@ -149,3 +149,11 @@ Please cite the [SeekVLN paper](https://arxiv.org/abs/2609.37353) when using thi
 
 Built on NaVILA/VILA, LLaVA, AuxThink, and VLN-CE/Habitat.
 See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for attribution and licenses.
+
+## License
+
+Original SeekVLN code is licensed under the [Apache License 2.0](LICENSE).
+Third-party code retains its own licenses and notices; see
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Model checkpoints, datasets,
+and Habitat/Matterport3D assets are subject to their respective terms and are
+not covered by this repository's code license.
